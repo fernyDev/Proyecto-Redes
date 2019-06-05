@@ -1,7 +1,8 @@
 import os
+import glob
 import socket
 import threading
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory, jsonify
 from werkzeug import secure_filename
 
 app = Flask(__name__, template_folder='templates')
@@ -14,10 +15,13 @@ filenames = []
 
 def delete_files(files):
     for file in files:
-        os.remove(file)
+        try:
+            os.remove(app.config['UPLOAD_FOLDER'] +"/"+ file)
+        except FileNotFoundError:
+            pass 
 
 def download_file(filename):
-    file = open(app.config['UPLOAD_FOLDER'] + filename, "wb")
+    file = open(app.config['UPLOAD_FOLDER'] +"/"+filename, "wb")
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect(("192.168.5.2", 3031))
     sock.send(bytes(filename), "UTF-8")
@@ -41,7 +45,7 @@ def envio(archivo, tamano, index, sock):
 
 
 def upload_file(sock, ip, port, files, tamano, index):
-    sock.connect((ip, puerto))
+    sock.connect((ip, port))
     for i in range(len(files)):
         archivo = open(os.path.join(
             app.config['UPLOAD_FOLDER'], files[i]), "br")
@@ -62,21 +66,25 @@ def upload_file(sock, ip, port, files, tamano, index):
 
 
 def upload_files(files):
-    tamano = [][]
+    #tamano = []*None
+    tamano = []
     ips = ["192.168.0.1", "192.168.2.1", "192.168.3.2", "192.168.4.2"]
     puerto = 3030
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     for j in range(len(files)):
-        tam = len(files[j].read())
+        tamano.append([])
+        info = open(app.config['UPLOAD_FOLDER'] +"/"+ files[j], "br")
+        tam = len(info.read())
         for k in range(4):
             tamano[j].append(int(tam/4))
             tamano[j].append(tamano[j][0])
             tamano[j].append(tamano[j][0])
             tamano[j].append(int(tam)-(tamano[j][0]*3))
+        info.close()
 
-    for i in range(len(ips))
-    t = threading.Thread(target=upload_file, args=(
+    for i in range(len(ips)):
+        t = threading.Thread(target=upload_file, args=(
         sock, ips[i], puerto, files, tamano, i,))
     t.start()
 
@@ -100,6 +108,21 @@ def shutdown_server():
 def index():
     return render_template('index.html')
 
+@app.route('/process',methods=['GET','POST'])
+def process():
+    path = request.form['name'] # este request (name) sale del form.js no del html
+    
+    if path :
+        lista = glob.glob(path,recursive=True)
+        print(lista)
+        if(len(lista)==0):
+            return jsonify({'error':'No se han encontrado coincidencias'})
+        lst = list()
+        for i in lista:
+            lst.append("<p>"+i+"</p>")
+        return jsonify({'cosa':lst})
+    return jsonify({'error':'Debe hacer una búsqueda'})
+
 
 @app.route('/shutdown', methods=['POST'])
 def shutdown():
@@ -114,13 +137,14 @@ def download():
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    uploaded_files = request.files.getlist("file[]")
-    for file in uploaded_files:
+    uploaded_f = request.files.getlist("file[]")
+    
+    for file in uploaded_f:
         if file:
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             filenames.append(filename)
-    uploaded_files(filenames)
+    upload_files(filenames)
     delete_files(filenames)
     return render_template('upload.html', filenames=filenames)
 

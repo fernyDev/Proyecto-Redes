@@ -38,7 +38,7 @@ def recibir():
     print("Conexion establecida con " + direccion[0])
     while(True):
         estado = str(con.recv(5),encoding="utf-8")
-        if estado = "True":
+        if estado == "True":
             con.send(bytes("1","utf-8"))
             tam = int(str(con.recv(20),encoding="utf-8"))
 
@@ -66,8 +66,8 @@ def enviar():#ensamblado de archivos y envio de pc1 al servidor http
     s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print("the sockets have been created")
     try:
-        s.bind((HOST, PORT3))
-        s2.bind((HOST, PORT2))
+        s.bind((HOST, int(PORT3)))
+        s2.bind((HOST, int(PORT2)))
     except Exception as e:
         print(e)
         #sys.exit()

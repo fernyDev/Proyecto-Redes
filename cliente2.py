@@ -26,7 +26,7 @@ def recibir():
     print("Conexion establecida con " + direccion[0])
     while(True):
         estado = str(con.recv(5), encoding="utf-8")
-        if estado = "True":
+        if estado == "True":
             con.send(bytes("1", "utf-8"))
             tam = int(str(con.recv(20), encoding="utf-8"))
 
@@ -40,7 +40,7 @@ def recibir():
                 print("Ahuevo, si lo recibio enterito")
             else:
                 print("No es igual :'v info= " +
-                      str(len(info)) + "\ttam= " + str(tam))
+                    str(len(info)) + "\ttam= " + str(tam))
             archivo_nuevo.write(info)
             del(info)
             archivo_nuevo.close()
@@ -55,7 +55,7 @@ def enviar():  # envio de ...
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print("the socket has been created")
     try:
-        s.bind((HOST2, int(PORT2))))
+        s.bind((HOST2, int(PORT2)))
     except Exception as e:
         print(e)
         sys.exit()

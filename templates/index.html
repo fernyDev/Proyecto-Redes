@@ -1,21 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
-    </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <h3 class="text-muted">How To Download a File</h3>
+<html>
+<title>formulario</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="{{ url_for('static', filename='w3.css') }}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.4.1.js') }}"   ></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/form.js') }}"   ></script>
+<!--script type="text/javascript" src="{{ url_for('static', filename='js/prueba.js') }}"   ></script-->
+<!--link rel="stylesheet" href="/home/Desktop/Redes2Recurseee/Practica7_SMTP/formulario_bonito/static/css/w3.css"-->
+    <body style="background-image: url({{ url_for('static', filename='img/wallpaper.jpg') }})">
+        <!--img src="{{url_for('static', filename='img/wallpaper4.jpg')}}" /-->
+        <div>
+            <div class="w3-container w3-card-4 w3-round-large w3-blue-grey w3-text-white w3-margin w3-display-topmiddle" style="width:70%">
+            
+                <form id="BUSCAR" action="http://localhost:5000/" method="POST">
+                    <h2 class="w3-center">Buscador de Archivos  -  3000</h2>
+                    
+                    <input class="w3-input w3-border w3-light-grey" type="text" id="PathInput" placeholder="Path">
+
+                    <p class="w3-center">
+                        <input type="submit" class="w3-button w3-section w3-light-grey w3-ripple" value="Buscar"/>
+                    </p>
+                </form>
+                
+                <div id="successAlert" style="display:none;">
+
+                </div>
+                <div id="errorAlert">
+                    <p>
+                        Seleccionar un path de archivos
+                    </p>
+                </div>
+                <div class="w3-row">
+                    <form action="upload" method="POST" enctype="multipart/form-data">
+                        <input type="file" webkitdirectory mozdirectory name="file[]"/><br />
+                        <div class="w3-third">
+                            <input type="submit" class="w3-button w3-section w3-light-grey w3-ripple w3-middle" value="Enviar"/>
+                        </div>         
+                    </form>
+                    <form action="download" method="POST">           
+                        <div class="w3-third w3-padding">
+                            <input type="submit" class="w3-button w3-section w3-light-grey w3-ripple" value="Descargar"/>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <hr/>
-            <div>
-        
+        <div>
+    </body>
+</html> 
+
+<!--
                 <form action="upload" method="post" enctype="multipart/form-data">
                     <input type="file" webkitdirectory mozdirectory name="file[]" class="span3" /><br />
                     <input type="submit" value="Upload"  class="span2">
+                    <input type="button" onclick="">
                 </form>
-            </div>
-        </div>
-    </body>
-</html>
+        -->
