@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+        <meta charset="UTF-8">
+        <script>
+            $('a').click(function(e) {
+                e.preventDefault();  //stop the browser from following
+                var txt = $(e.target).text();
+                window.location.href = 'upload/'+ txt;
+            });
+        </script>
+    </head>
+    <body>
+    <div class="container">
+        <div class="header">
+            <h3 class="text-muted">Uploaded files</h3>
+        </div>
+        <hr/>
+        <div>
+            This is a list of the files you just uploaded, click on them to load/download them
+            <ul>
+                {% for file in filenames %}
+                <li><a href="{{url_for('uploaded_file', filename=file)}}">{{file}}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    </body>
+</html>
